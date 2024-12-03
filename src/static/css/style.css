@@ -24,12 +24,14 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    padding: 15px 20px;
+    height: var(--header-height, 60px);
+    padding: 0 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--background);
-    z-index: 2100;
+    z-index: 3000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-left {
@@ -43,19 +45,94 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
-    margin-left: 0;
+    padding: 15px;
+    margin: 0;
     position: relative;
-    z-index: 2200;
-    pointer-events: auto;
+    z-index: 3001;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
 }
 
-.menu-toggle span {
-    display: block;
-    width: 20px;
+.menu-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.menu-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Hamburger Icon */
+.hamburger {
+    width: 24px;
+    height: 18px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hamburger-line {
+    width: 100%;
     height: 2px;
-    background: var(--accent);
-    margin: 4px 0;
+    background-color: var(--accent);
+    border-radius: 4px;
+    transition: transform 0.3s ease,
+                opacity 0.2s ease;
+    transform-origin: left center;
+}
+
+/* Animation for open state */
+.menu-toggle[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    transform: rotate(45deg);
+    width: 110%;
+}
+
+.menu-toggle[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.menu-toggle[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg);
+    width: 110%;
+}
+
+/* Hover Effects */
+.menu-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.menu-toggle:hover .hamburger-line {
+    background-color: var(--primary);
+}
+
+/* Focus States */
+.menu-toggle:focus {
+    outline: none;
+}
+
+.menu-toggle:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .menu-toggle {
+        padding: 18px;
+    }
+    
+    .hamburger {
+        width: 26px;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (forced-colors: active) {
+    .hamburger-line {
+        background-color: ButtonText;
+        forced-color-adjust: none;
+    }
 }
 
 .logo {
@@ -84,14 +161,16 @@ body {
 /* Sidebar */
 .sidebar {
     position: fixed;
-    top: 0;
+    top: var(--header-height, 60px);
     left: -300px;
     width: 300px;
-    height: 100vh;
+    height: calc(100vh - var(--header-height, 60px));
     background: var(--background);
-    padding: 100px 40px;
-    transition: left 0.3s ease;
-    z-index: 2050;
+    padding: 20px;
+    transition: all 0.3s ease;
+    z-index: 2999;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
 }
 
 .sidebar.open {
@@ -99,14 +178,15 @@ body {
 }
 
 .sidebar-section {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .sidebar-section h3 {
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    color: var(--text-secondary);
 }
 
 .sidebar-section ul {
@@ -114,14 +194,23 @@ body {
 }
 
 .sidebar-section li {
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 
 .sidebar-section a {
     text-decoration: none;
     color: var(--text-color);
-    font-size: 0.9rem;
-    letter-spacing: 1px;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    display: block;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.sidebar-section a:hover {
+    background: rgba(0, 0, 0, 0.04);
+    padding-left: 16px;
 }
 
 /* Main Content */
@@ -130,6 +219,12 @@ body {
     margin-top: 0;
     padding: 40px 20px;
     z-index: 2100;
+    transition: filter 0.3s ease;
+}
+
+.sidebar.open ~ .main-content {
+    filter: blur(4px);
+    pointer-events: none;
 }
 
 /* Search Section */
@@ -351,13 +446,19 @@ body {
 .video-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 3000;
     opacity: 0;
-    animation: fadeIn 0.3s ease forwards;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.video-modal.active {
+    opacity: 1;
+    visibility: visible;
 }
 
 .modal-content {
@@ -365,6 +466,12 @@ body {
     width: 90%;
     max-width: 1200px;
     aspect-ratio: 16/9;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.video-modal.active .modal-content {
+    transform: scale(1);
 }
 
 .video-wrapper {
@@ -372,21 +479,14 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-}
-
-.video-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .close-modal {
     position: absolute;
     top: -40px;
-    right: 0;
+    right: -40px;
     background: none;
     border: none;
     color: white;
@@ -394,11 +494,18 @@ body {
     cursor: pointer;
     padding: 10px;
     opacity: 0.8;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
+    z-index: 3001;
 }
 
 .close-modal:hover {
     opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
 }
 
 @keyframes fadeIn {
@@ -621,7 +728,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 3000;
+    backdrop-filter: blur(8px);
 }
 
 .loading-spinner {
@@ -634,6 +742,7 @@ body {
     animation: spin 1s linear infinite, pulse 2s ease-in-out infinite;
     margin-bottom: 20px;
     position: relative;
+    z-index: 3001;
 }
 
 .loading-spinner::before {
@@ -654,6 +763,7 @@ body {
     text-transform: uppercase;
     animation: pulse 2s ease-in-out infinite;
     position: relative;
+    z-index: 3001;
 }
 
 .loading-text::after {
@@ -1132,4 +1242,251 @@ select {
 .header-text {
     position: relative;
     z-index: 1;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+    position: fixed;
+    top: var(--header-height, 60px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 2998;
+}
+
+/* Active States */
+.sidebar.open {
+    left: 0;
+}
+
+.sidebar.open ~ .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Menu Toggle Button */
+.menu-toggle {
+    position: relative;
+    z-index: 3001;
+}
+
+/* Ensure logo stays visible */
+.logo {
+    position: relative;
+    z-index: 3001;
+}
+
+/* Prevent body scroll when sidebar is open */
+body.sidebar-open {
+    overflow: hidden;
+}
+
+/* Sidebar Footer - Compact Design */
+.sidebar-footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--background);
+    padding: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin-top: auto;
+    font-size: 0.85rem;
+}
+
+.dev-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.dev-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+}
+
+.dev-details {
+    flex: 1;
+    line-height: 1.3;
+}
+
+.dev-details h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.dev-details p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.project-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 6px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    gap: 15px;
+}
+
+.project-info small {
+    opacity: 0.7;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    font-size: 1rem;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.social-icon.github {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.social-links a {
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-links a:hover .social-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.social-links a:hover .github {
+    color: #333;  /* GitHub's brand color */
+}
+
+/* Splash Screen */
+.splash-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.splash-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.splash-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.splash-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.splash-icon {
+    width: 80px;
+    height: 80px;
+    color: var(--primary, #00A67E);
+}
+
+.splash-circle {
+    stroke-width: 2;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    animation: drawCircle 1s ease forwards;
+}
+
+.splash-arrow {
+    stroke-width: 2;
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: drawArrow 0.5s ease forwards 0.8s;
+}
+
+.splash-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--text-color);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp 0.5s ease forwards 1.2s;
+}
+
+.splash-loader {
+    width: 200px;
+    height: 2px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 1px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards 1.5s;
+}
+
+.splash-bar {
+    width: 100%;
+    height: 100%;
+    background: var(--primary, #00A67E);
+    transform: translateX(-100%);
+    animation: loadBar 0.8s ease forwards 1.6s;
+}
+
+@keyframes drawCircle {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes drawArrow {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes loadBar {
+    to {
+        transform: translateX(0);
+    }
 }

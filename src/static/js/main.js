@@ -170,29 +170,58 @@ function playVideo(videoId) {
         return;
     }
 
-    const modal = document.createElement('div');
-    modal.className = 'video-modal';
+    // Create modal if it doesn't exist
+    let modal = document.querySelector('.video-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'video-modal';
+        document.body.appendChild(modal);
+    }
+
+    // Update modal content
     modal.innerHTML = `
         <div class="modal-content">
             <div class="video-wrapper">
                 <iframe 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&enablejsapi=1" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
                 ></iframe>
             </div>
-            <button class="close-modal">×</button>
+            <button class="close-modal" aria-label="Close video">×</button>
         </div>
     `;
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal || e.target.className === 'close-modal') {
-            document.body.removeChild(modal);
-        }
+    // Show modal
+    requestAnimationFrame(() => {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
     });
 
-    document.body.appendChild(modal);
+    // Handle closing
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+        
+        // Remove iframe after animation
+        setTimeout(() => {
+            modal.querySelector('iframe').src = '';
+        }, 300);
+    }
+
+    // Close on button click
+    modal.querySelector('.close-modal').addEventListener('click', closeModal);
+
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
 }
 
 // Welcome Screen Management
@@ -295,6 +324,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (welcomeScreen) {
         welcomeScreen.style.display = 'none';
     }
+
+    const splashScreen = document.querySelector('.splash-screen');
+    
+    // Hide splash screen after animations
+    setTimeout(() => {
+        splashScreen.classList.add('fade-out');
+        // Remove from DOM after fade
+        setTimeout(() => {
+            splashScreen.remove();
+        }, 500);
+    }, 2500);
 });
 
 function setupHeaderAnimation() {
@@ -319,5 +359,87 @@ function setupHeaderAnimation() {
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('open');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const body = document.body;
+    
+    // Create overlay if it doesn't exist
+    let overlay = document.querySelector('.sidebar-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+        
+        // Close sidebar when clicking overlay
+        overlay.addEventListener('click', closeSidebar);
+    }
+    
+    // Toggle states
+    const isOpen = sidebar.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', isOpen);
+    menuToggle.classList.toggle('active');
+    body.classList.toggle('sidebar-open');
+    
+    // Trap focus within sidebar when open
+    if (isOpen) {
+        trapFocus(sidebar);
+    }
+}
+
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const body = document.body;
+    
+    sidebar.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.classList.remove('active');
+    body.classList.remove('sidebar-open');
+}
+
+// Focus trap for accessibility
+function trapFocus(element) {
+    const focusableElements = element.querySelectorAll(
+        'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
+    );
+    
+    if (focusableElements.length === 0) return;
+    
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+    
+    firstFocusable.focus();
+    
+    element.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        }
+    });
+}
+
+// Close sidebar on escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeSidebar();
+    }
+});
+
+// Add error handling for window reference
+if (typeof window !== 'undefined') {
+    window.addEventListener('error', (event) => {
+        console.warn('Error caught:', event.error);
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+        console.warn('Promise rejection:', event.reason);
+    });
 }

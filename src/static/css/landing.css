@@ -125,10 +125,7 @@ body {
 }
 
 .hero-cta {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-bottom: 0;
+    display: none;
 }
 
 .primary-button {
@@ -902,5 +899,40 @@ body {
     
     .nav-center {
         display: none;
+    }
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right .primary-button {
+    padding: 10px 24px;
+    background: var(--primary);
+    color: white;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.nav-right .primary-button:hover {
+    background: transparent;
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .nav-right {
+        display: none;  /* Hide on mobile to prevent clutter */
+    }
+    
+    /* Show the hero CTA button on mobile instead */
+    .hero-cta {
+        display: block;
     }
 } 

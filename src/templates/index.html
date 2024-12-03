@@ -11,14 +11,41 @@
     <!-- Add PWA meta tags -->
     <meta name="theme-color" content="#00A67E">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
 <body>
+    <!-- Add this right after <body> -->
+    <div class="splash-screen">
+        <div class="splash-content">
+            <div class="splash-logo">
+                <svg class="splash-icon" viewBox="0 0 100 100">
+                    <circle class="splash-circle" cx="50" cy="50" r="45" fill="none" stroke="currentColor"/>
+                    <path class="splash-arrow" d="M35,50 L65,50 M55,40 L65,50 L55,60" fill="none" stroke="currentColor"/>
+                </svg>
+                <div class="splash-text">UNCYCLE</div>
+            </div>
+            <div class="splash-loader">
+                <div class="splash-bar"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="main-nav" role="navigation" aria-label="Main navigation">
         <div class="nav-left">
-            <button class="menu-toggle" onclick="toggleSidebar()">
-                <span></span>
-                <span></span>
+            <button 
+                class="menu-toggle" 
+                onclick="toggleSidebar()" 
+                aria-label="Toggle menu" 
+                aria-expanded="false"
+                aria-controls="sidebar"
+            >
+                <div class="hamburger">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </div>
             </button>
             <a href="/" class="logo">UNCYCLE</a>
         </div>
@@ -70,6 +97,30 @@
                     <li><a href="#" onclick="quickSearch('furniture')">FURNITURE</a></li>
                     <li><a href="#" onclick="quickSearch('electronics')">ELECTRONICS</a></li>
                 </ul>
+            </div>
+        </div>
+        
+        <!-- Developer Info Footer -->
+        <div class="sidebar-footer">
+            <div class="dev-info">
+                <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="David Imongirie" class="dev-avatar">
+                <div class="dev-details">
+                    <h4>David Imongirie</h4>
+                    <p>MSc Geography, University of Vienna</p>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="social-links">
+                    <a href="https://github.com/solaceking" target="_blank" rel="noopener" aria-label="GitHub Profile">
+                        <svg class="social-icon github" viewBox="0 0 24 24">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:david.imongirie@yahoo.co.uk" aria-label="Email Contact">
+                        <span class="social-icon">✉️</span>
+                    </a>
+                </div>
+                <small>v1.0.0</small>
             </div>
         </div>
     </div>
@@ -161,10 +212,17 @@
 
     <!-- Service Worker Registration -->
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/static/js/sw.js')
-                .then(registration => console.log('ServiceWorker registered'))
-                .catch(err => console.error('ServiceWorker registration failed:', err));
+        if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('/static/js/sw.js', {
+                        scope: '/'
+                    });
+                    console.log('ServiceWorker registered successfully');
+                } catch (err) {
+                    console.warn('ServiceWorker registration failed:', err);
+                }
+            });
         }
     </script>
 
