@@ -74,15 +74,21 @@ function hideLoading() {
 }
 
 async function searchTutorials(event, isNewSearch = true) {
+    console.log('Search initiated:', { event, isNewSearch, currentQuery });
+    
     if (event?.preventDefault) {
         event.preventDefault();
         currentQuery = event.target.q.value;
-        // Add to search history
         SearchHistory.addSearch(currentQuery);
     } else if (typeof event === 'string') {
         currentQuery = event;
     }
-    
+
+    if (!currentQuery) {
+        console.log('No search query provided');
+        return;
+    }
+
     if (isNewSearch) {
         currentPage = 1;
         hasMore = true;
@@ -92,24 +98,30 @@ async function searchTutorials(event, isNewSearch = true) {
             loadMoreButton = null;
         }
     }
-    
-    if (!hasMore || isLoading || !currentQuery) return;
-    
+
     isLoading = true;
     showLoading();
-    
+
     try {
-        const response = await fetch(
-            `/search?q=${encodeURIComponent(currentQuery)}&page=${currentPage}&sort=${currentSort}&duration=${currentDuration}`
-        );
-        const data = await response.json();
+        const url = `/search?q=${encodeURIComponent(currentQuery)}&page=${currentPage}&sort=${currentSort}&duration=${currentDuration}`;
+        console.log('Fetching from:', url);
         
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log('Search results:', data);
+
         if (data.error) {
             resultsDiv.innerHTML = `<div class="error-message">❌ ${data.error}</div>`;
             return;
         }
-        
-        resultsDiv.insertAdjacentHTML('beforeend', data.items.map(video => `
+
+        if (!data.items || data.items.length === 0) {
+            resultsDiv.innerHTML = '<div class="no-results">No results found</div>';
+            return;
+        }
+
+        // Create video cards for each result
+        const videoCards = data.items.map(video => `
             <div class="video-card" onclick="playVideo('${video.id}')">
                 <div class="thumbnail-container">
                     <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
@@ -126,11 +138,26 @@ async function searchTutorials(event, isNewSearch = true) {
                     ` : ''}
                 </div>
             </div>
-        `).join(''));
-        
+        `).join('');
+
+        // Remove placeholder if it exists
+        const placeholder = resultsDiv.querySelector('.search-placeholder');
+        if (placeholder) {
+            placeholder.remove();
+        }
+
+        // Add the new results
+        resultsDiv.insertAdjacentHTML('beforeend', videoCards);
+
+        // Initialize loading animations for new cards
+        document.querySelectorAll('.video-card:not(.loaded)').forEach(card => {
+            requestAnimationFrame(() => card.classList.add('loaded'));
+        });
+
         hasMore = data.hasMore;
         currentPage = data.nextPage;
-        
+
+        // Update load more button
         if (hasMore) {
             if (!loadMoreButton) {
                 loadMoreButton = document.createElement('button');
@@ -139,19 +166,20 @@ async function searchTutorials(event, isNewSearch = true) {
             }
             loadMoreButton.innerHTML = 'Show More Results';
             loadMoreButton.disabled = false;
-            resultsDiv.after(loadMoreButton);
+            resultsDiv.parentElement.appendChild(loadMoreButton);
         } else if (loadMoreButton) {
             loadMoreButton.remove();
             loadMoreButton = null;
         }
-        
+
+        // Scroll to results on new search
         if (isNewSearch && resultsDiv.children.length > 0) {
             resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        
+
     } catch (error) {
-        resultsDiv.innerHTML = '<div class="error-message">❌ Error loading results</div>';
-        console.error(error);
+        console.error('Search error:', error);
+        resultsDiv.innerHTML = `<div class="error-message">❌ ${error.message}</div>`;
     } finally {
         isLoading = false;
         hideLoading();

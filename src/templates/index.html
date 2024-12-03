@@ -123,16 +123,31 @@
                 </button>
                 <div class="dropdown-content" id="settings-dropdown">
                     <div class="setting-item">
+                        <label class="setting-label">Dark Mode</label>
+                        <button class="theme-toggle" aria-label="Toggle dark mode">
+                            <svg class="theme-icon" viewBox="0 0 24 24">
+                                <path class="sun" d="M12 3v2m0 14v2M5.64 5.64l1.4 1.4m10.32 10.32l1.4 1.4M3 12h2m14 0h2M5.64 18.36l1.4-1.4m10.32-10.32l1.4-1.4"/>
+                                <circle class="sun-circle" cx="12" cy="12" r="4"/>
+                                <path class="moon" d="M12 3a9 9 0 109 9c0-4.97-4.03-9-9-9z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="setting-item">
                         <label class="setting-label">Search History</label>
-                        <button class="toggle-switch" onclick="SearchHistory.toggleHistory()" aria-label="Toggle search history">
+                        <button 
+                            class="toggle-switch" 
+                            onclick="SearchHistory.toggleHistory()" 
+                            aria-label="Toggle search history"
+                            aria-checked="false"
+                        >
                             <span class="switch-track"></span>
                             <span class="switch-thumb"></span>
                         </button>
                     </div>
-                    <button class="setting-action" onclick="showShortcutsModal()">
+                    <button class="setting-action" onclick="Settings.showShortcutsModal()">
                         Keyboard Shortcuts ⌨️
                     </button>
-                    <button class="setting-action warning" onclick="clearAllData()">
+                    <button class="setting-action warning" onclick="Settings.clearAllData()">
                         Reset All Data
                     </button>
                 </div>
@@ -225,7 +240,10 @@
         <!-- Grid Layout -->
         <section class="grid-layout">
             <div id="results" class="project-grid">
-                <!-- Results will be populated here -->
+                <!-- Add a loading placeholder -->
+                <div class="search-placeholder">
+                    Search for items to upcycle
+                </div>
             </div>
         </section>
     </main>
@@ -249,17 +267,29 @@
         gtag('config', 'YOUR-GA-ID');
     </script>
 
-    <!-- Service Worker Registration -->
+    <!-- Update Service Worker Registration -->
     <script>
-        if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+        if ('serviceWorker' in navigator) {
             window.addEventListener('load', async () => {
                 try {
-                    const registration = await navigator.serviceWorker.register('/static/js/sw.js', {
-                        scope: '/'
+                    const registration = await navigator.serviceWorker.register('/static/js/sw.js');
+                    console.log('ServiceWorker registration successful');
+
+                    // Handle updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New version available
+                                if (confirm('New version available! Reload to update?')) {
+                                    newWorker.postMessage({ action: 'skipWaiting' });
+                                    window.location.reload();
+                                }
+                            }
+                        });
                     });
-                    console.log('ServiceWorker registered successfully');
-                } catch (err) {
-                    console.warn('ServiceWorker registration failed:', err);
+                } catch (error) {
+                    console.error('ServiceWorker registration failed:', error);
                 }
             });
         }
@@ -332,6 +362,22 @@
             ThemeManager.init();
             SearchHistory.init();
             Settings.init();
+        });
+    </script>
+
+    <!-- Add after other scripts -->
+    <script src="{{ url_for('static', filename='js/share.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/keyboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            ThemeManager.init();
+            SearchHistory.init();
+            Settings.init();
+            ShareManager.init();
+            KeyboardManager.init();
+            LoadingManager.init();
         });
     </script>
 </body>

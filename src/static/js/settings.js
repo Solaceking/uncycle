@@ -35,13 +35,15 @@ const Settings = {
         const shortcuts = [
             { key: '/', description: 'Focus search' },
             { key: 'Esc', description: 'Close modals' },
-            { key: '↑/↓', description: 'Navigate results' }
+            { key: '↑/↓', description: 'Navigate results' },
+            { key: 'Space', description: 'Play/Pause video' },
+            { key: '←/→', description: 'Seek video' }
         ];
 
         const modal = document.createElement('div');
         modal.className = 'shortcuts-modal';
         modal.innerHTML = `
-            <div class="shortcuts-content">
+            <div class="modal-content">
                 <h2>Keyboard Shortcuts</h2>
                 <div class="shortcuts-list">
                     ${shortcuts.map(s => `
@@ -51,12 +53,12 @@ const Settings = {
                         </div>
                     `).join('')}
                 </div>
-                <button class="close-modal">Close</button>
+                <button class="close-modal" onclick="this.closest('.shortcuts-modal').remove()">×</button>
             </div>
         `;
 
         document.body.appendChild(modal);
-        modal.querySelector('.close-modal').onclick = () => modal.remove();
+        requestAnimationFrame(() => modal.classList.add('active'));
     },
 
     clearAllData() {
