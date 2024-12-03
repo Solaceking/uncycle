@@ -1,8 +1,125 @@
 :root {
     --text-color: #333333;
+    --text-secondary: #666666;
     --background: #ffffff;
-    --accent: #000000;
-    --spacing: 20px;
+    --background-secondary: #f5f5f5;
+    --accent: #00A67E;
+    --accent-hover: #008c69;
+    --border: #e0e0e0;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
+    --header-bg: rgba(255, 255, 255, 0.95);
+    --sidebar-bg: #ffffff;
+    
+    --theme-transition: 0.3s ease;
+}
+
+/* Dark theme colors */
+[data-theme="dark"] {
+    --text-color: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --background: #121212;
+    --background-secondary: #1e1e1e;
+    --accent: #00d4a0;
+    --accent-hover: #00ffbf;
+    --border: #2a2a2a;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --card-bg: #1a1a1a;
+    --header-bg: rgba(18, 18, 18, 0.95);
+    --sidebar-bg: #1a1a1a;
+}
+
+/* Theme transition */
+body {
+    transition: background-color var(--theme-transition),
+                color var(--theme-transition);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--theme-transition);
+}
+
+.theme-toggle:hover {
+    background-color: var(--background-secondary);
+}
+
+.theme-icon {
+    width: 24px;
+    height: 24px;
+    stroke: var(--text-color);
+    stroke-width: 2;
+    stroke-linecap: round;
+    fill: none;
+    transition: transform var(--theme-transition);
+}
+
+/* Icon states */
+.theme-icon .sun {
+    opacity: 1;
+    transform-origin: center;
+    transition: opacity var(--theme-transition);
+}
+
+.theme-icon .moon {
+    opacity: 0;
+    transform-origin: center;
+    transition: opacity var(--theme-transition);
+}
+
+[data-theme="dark"] .theme-icon .sun {
+    opacity: 0;
+}
+
+[data-theme="dark"] .theme-icon .moon {
+    opacity: 1;
+    fill: var(--text-color);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] {
+    /* Cards and containers */
+    .video-card,
+    .sidebar,
+    .modal-content,
+    .search-section input {
+        background-color: var(--card-bg);
+        border-color: var(--border);
+    }
+
+    /* Navigation */
+    .main-nav {
+        background-color: var(--header-bg);
+        backdrop-filter: blur(10px);
+    }
+
+    /* Buttons and interactive elements */
+    .quick-link {
+        background-color: var(--background-secondary);
+        border-color: var(--border);
+    }
+
+    .quick-link:hover {
+        border-color: var(--accent);
+    }
+
+    /* Overlays */
+    .loading-overlay {
+        background-color: rgba(18, 18, 18, 0.9);
+    }
+
+    /* Shadows */
+    .video-card:hover {
+        box-shadow: 0 8px 16px var(--shadow);
+    }
 }
 
 * {
@@ -160,17 +277,23 @@ body {
 
 /* Sidebar */
 .sidebar {
+    display: flex;
+    flex-direction: column;
     position: fixed;
     top: var(--header-height, 60px);
     left: -300px;
     width: 300px;
     height: calc(100vh - var(--header-height, 60px));
     background: var(--background);
-    padding: 20px;
     transition: all 0.3s ease;
     z-index: 2999;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-content {
+    flex: 1;
     overflow-y: auto;
+    padding: 20px 20px 0 20px;  /* Remove bottom padding */
 }
 
 .sidebar.open {
@@ -446,7 +569,7 @@ body {
 .video-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(0, 0, 0, 0.98);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -481,6 +604,49 @@ body {
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    background: #000;
+}
+
+/* Custom Controls */
+.custom-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.video-wrapper:hover .custom-controls {
+    opacity: 1;
+}
+
+.play-pause {
+    background: none;
+    border: none;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    cursor: pointer;
+    color: white;
+    opacity: 0.9;
+    transition: all 0.2s ease;
+}
+
+.play-pause:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.play-pause svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
 }
 
 .close-modal {
@@ -503,9 +669,10 @@ body {
     transform: scale(1.1);
 }
 
-/* Prevent body scroll when modal is open */
-body.modal-open {
-    overflow: hidden;
+/* Hide iframe border in Safari */
+iframe {
+    border: 0 !important;
+    background: #000;
 }
 
 @keyframes fadeIn {
@@ -636,22 +803,76 @@ body.modal-open {
 
 /* History styles */
 .history-section {
+    display: block;  /* Show it now */
     max-width: 800px;
-    margin: 20px auto;
+    margin: 40px auto;
     padding: 0 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp 0.3s ease forwards;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.history-header h3 {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.clear-history {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.clear-history:hover {
+    opacity: 1;
 }
 
 .history-item {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+    align-items: center;
+    padding: 12px 15px;
+    background: var(--background-secondary);
+    border-radius: 8px;
+    margin-bottom: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .history-item:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background: var(--background);
+    box-shadow: 0 2px 8px var(--shadow);
+    transform: translateY(-1px);
+}
+
+.history-query {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.history-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Trending styles */
@@ -1290,13 +1511,29 @@ body.sidebar-open {
 .sidebar-footer {
     position: sticky;
     bottom: 0;
+    width: 100%;
+    background: var(--background);
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+    z-index: 3;  /* Keep above sidebar content */
+}
+
+/* Prevent content from going under footer */
+.sidebar-content {
+    padding-bottom: 100px;  /* Height of footer + extra space */
+}
+
+/* Smooth shadow transition for footer */
+.sidebar-footer::before {
+    content: '';
+    position: absolute;
+    top: -20px;
     left: 0;
     right: 0;
-    background: var(--background);
-    padding: 12px;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin-top: auto;
-    font-size: 0.85rem;
+    height: 20px;
+    background: linear-gradient(to top, var(--background), transparent);
+    pointer-events: none;
 }
 
 .dev-info {
@@ -1489,4 +1726,173 @@ body.sidebar-open {
     to {
         transform: translateX(0);
     }
+}
+
+/* Settings Section */
+.settings-section {
+    border-top: 1px solid var(--border);
+    margin-top: 30px;
+    padding-top: 20px;
+}
+
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.setting-item:hover {
+    background-color: var(--background-secondary);
+}
+
+.setting-label {
+    font-size: 0.85rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.switch-track {
+    position: absolute;
+    inset: 0;
+    background-color: var(--background-secondary);
+    border-radius: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.switch-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--text-secondary);
+    border-radius: 50%;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.toggle-switch[aria-checked="true"] .switch-track {
+    background-color: var(--accent);
+}
+
+.toggle-switch[aria-checked="true"] .switch-thumb {
+    transform: translateX(20px);
+    background-color: white;
+}
+
+/* Setting Actions */
+.setting-action {
+    background: none;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.setting-action:hover {
+    background-color: var(--background-secondary);
+    color: var(--accent);
+}
+
+.setting-action.warning {
+    color: #ff3366;
+}
+
+.setting-action.warning:hover {
+    background-color: rgba(255, 51, 102, 0.1);
+}
+
+/* Sidebar Dropdowns */
+.sidebar-dropdown {
+    border-bottom: 1px solid var(--border);
+}
+
+.dropdown-trigger {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dropdown-trigger:hover {
+    background: var(--background-secondary);
+}
+
+.dropdown-arrow {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-trigger.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-content {
+    display: none;
+    padding: 8px 0;
+    background: var(--background);
+}
+
+.dropdown-content.active {
+    display: block;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px 20px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-content a:hover {
+    background: var(--background-secondary);
+    padding-left: 25px;
+}
+
+/* Setting items within dropdown */
+.dropdown-content .setting-item {
+    padding: 10px 20px;
+}
+
+.dropdown-content .setting-action {
+    width: 100%;
+    text-align: left;
+    padding: 10px 20px;
 }

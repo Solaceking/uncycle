@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </head>
 <body>
     <!-- Add this right after <body> -->
@@ -79,28 +80,66 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-content">
-            <div class="sidebar-section">
-                <h3>MATERIALS</h3>
-                <ul>
-                    <li><a href="#" onclick="quickSearch('plastic')">PLASTIC</a></li>
-                    <li><a href="#" onclick="quickSearch('glass')">GLASS</a></li>
-                    <li><a href="#" onclick="quickSearch('paper')">PAPER</a></li>
-                    <li><a href="#" onclick="quickSearch('metal')">METAL</a></li>
-                    <li><a href="#" onclick="quickSearch('textile')">TEXTILE</a></li>
-                </ul>
+            <!-- Materials Dropdown -->
+            <div class="sidebar-dropdown">
+                <button class="dropdown-trigger" onclick="toggleDropdown('materials')">
+                    <span>MATERIALS</span>
+                    <svg class="dropdown-arrow" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5"/>
+                    </svg>
+                </button>
+                <div class="dropdown-content" id="materials-dropdown">
+                    <a href="#" onclick="quickSearch('plastic')">PLASTIC</a>
+                    <a href="#" onclick="quickSearch('glass')">GLASS</a>
+                    <a href="#" onclick="quickSearch('paper')">PAPER</a>
+                    <a href="#" onclick="quickSearch('metal')">METAL</a>
+                    <a href="#" onclick="quickSearch('textile')">TEXTILE</a>
+                </div>
             </div>
-            <div class="sidebar-section">
-                <h3>ITEMS</h3>
-                <ul>
-                    <li><a href="#" onclick="quickSearch('bottles')">BOTTLES</a></li>
-                    <li><a href="#" onclick="quickSearch('containers')">CONTAINERS</a></li>
-                    <li><a href="#" onclick="quickSearch('furniture')">FURNITURE</a></li>
-                    <li><a href="#" onclick="quickSearch('electronics')">ELECTRONICS</a></li>
-                </ul>
+
+            <!-- Items Dropdown -->
+            <div class="sidebar-dropdown">
+                <button class="dropdown-trigger" onclick="toggleDropdown('items')">
+                    <span>ITEMS</span>
+                    <svg class="dropdown-arrow" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5"/>
+                    </svg>
+                </button>
+                <div class="dropdown-content" id="items-dropdown">
+                    <a href="#" onclick="quickSearch('bottles')">BOTTLES</a>
+                    <a href="#" onclick="quickSearch('containers')">CONTAINERS</a>
+                    <a href="#" onclick="quickSearch('furniture')">FURNITURE</a>
+                    <a href="#" onclick="quickSearch('electronics')">ELECTRONICS</a>
+                </div>
+            </div>
+
+            <!-- Settings Dropdown -->
+            <div class="sidebar-dropdown">
+                <button class="dropdown-trigger" onclick="toggleDropdown('settings')">
+                    <span>SETTINGS</span>
+                    <svg class="dropdown-arrow" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5"/>
+                    </svg>
+                </button>
+                <div class="dropdown-content" id="settings-dropdown">
+                    <div class="setting-item">
+                        <label class="setting-label">Search History</label>
+                        <button class="toggle-switch" onclick="SearchHistory.toggleHistory()" aria-label="Toggle search history">
+                            <span class="switch-track"></span>
+                            <span class="switch-thumb"></span>
+                        </button>
+                    </div>
+                    <button class="setting-action" onclick="showShortcutsModal()">
+                        Keyboard Shortcuts ⌨️
+                    </button>
+                    <button class="setting-action warning" onclick="clearAllData()">
+                        Reset All Data
+                    </button>
+                </div>
             </div>
         </div>
-        
-        <!-- Developer Info Footer -->
+
+        <!-- Keep the footer -->
         <div class="sidebar-footer">
             <div class="dev-info">
                 <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="David Imongirie" class="dev-avatar">
@@ -284,5 +323,16 @@
             <button class="tutorial-skip">Skip Tutorial</button>
         </div>
     </div>
+
+    <script src="{{ url_for('static', filename='js/search-history.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            ThemeManager.init();
+            SearchHistory.init();
+            Settings.init();
+        });
+    </script>
 </body>
 </html> 

@@ -77,6 +77,8 @@ async function searchTutorials(event, isNewSearch = true) {
     if (event?.preventDefault) {
         event.preventDefault();
         currentQuery = event.target.q.value;
+        // Add to search history
+        SearchHistory.addSearch(currentQuery);
     } else if (typeof event === 'string') {
         currentQuery = event;
     }
@@ -178,16 +180,24 @@ function playVideo(videoId) {
         document.body.appendChild(modal);
     }
 
-    // Update modal content
+    // Update modal content with clean player
     modal.innerHTML = `
         <div class="modal-content">
             <div class="video-wrapper">
                 <iframe 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1&fs=0&color=white"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
                     allowfullscreen
                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
                 ></iframe>
+                <div class="custom-controls">
+                    <button class="play-pause" aria-label="Play/Pause">
+                        <svg viewBox="0 0 24 24">
+                            <path class="play" d="M8 5v14l11-7z"/>
+                            <path class="pause" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
             <button class="close-modal" aria-label="Close video">×</button>
         </div>
@@ -443,3 +453,37 @@ if (typeof window !== 'undefined') {
         console.warn('Promise rejection:', event.reason);
     });
 }
+
+// Add this function
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(`${id}-dropdown`);
+    const trigger = dropdown.previousElementSibling;
+    const allDropdowns = document.querySelectorAll('.dropdown-content');
+    const allTriggers = document.querySelectorAll('.dropdown-trigger');
+    
+    // Close other dropdowns
+    allDropdowns.forEach(d => {
+        if (d !== dropdown) {
+            d.classList.remove('active');
+        }
+    });
+    
+    allTriggers.forEach(t => {
+        if (t !== trigger) {
+            t.classList.remove('active');
+        }
+    });
+    
+    // Toggle current dropdown
+    dropdown.classList.toggle('active');
+    trigger.classList.toggle('active');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.sidebar-dropdown')) {
+        document.querySelectorAll('.dropdown-content, .dropdown-trigger').forEach(el => {
+            el.classList.remove('active');
+        });
+    }
+});
