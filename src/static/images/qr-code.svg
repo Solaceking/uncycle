@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <!-- QR Code for https://uncycle.onrender.com/ -->
+    <path d="M0 0h200v200H0z" fill="#fff"/>
+    <path d="M20 20h160v160H20z" fill="#000"/>
+    <!-- Add QR code data path here -->
+</svg> 

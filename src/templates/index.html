@@ -189,46 +189,42 @@
         <!-- Rest of video card content -->
     </div>
 
-    <!-- Add after body tag -->
-    <div id="welcome-screen" class="welcome-overlay">
-        <div class="welcome-content">
-            <h1>Welcome to Uncycle</h1>
-            <p class="tagline">Transform waste into wonderful creations</p>
-            
-            <div class="welcome-steps">
-                <div class="step">
-                    <div class="step-icon">🔍</div>
-                    <h3>Search</h3>
-                    <p>Find creative ways to reuse everyday items</p>
-                </div>
-                <div class="step">
-                    <div class="step-icon">💡</div>
-                    <h3>Discover</h3>
-                    <p>Get inspired by thousands of creative ideas</p>
-                </div>
-                <div class="step">
-                    <div class="step-icon">♻️</div>
-                    <h3>Create</h3>
-                    <p>Turn waste into beautiful and useful items</p>
+    <!-- Tutorial Modal -->
+    <div class="tutorial-modal hidden">
+        <div class="tutorial-slides">
+            <!-- Slide 1 -->
+            <div class="tutorial-slide" data-step="1">
+                <div class="slide-content">
+                    <div class="slide-icon">🔍</div>
+                    <h2>Search Anything</h2>
+                    <p>Type any item you want to reuse - bottles, paper, clothing, anything!</p>
                 </div>
             </div>
-            
-            <button id="start-tutorial" class="welcome-button">Start Tutorial</button>
-            <button id="skip-tutorial" class="welcome-button secondary">Skip Tutorial</button>
-        </div>
-    </div>
 
-    <!-- Tutorial overlay -->
-    <div id="tutorial-overlay" class="tutorial-overlay hidden">
-        <div class="tutorial-step" data-step="1">
-            <div class="tutorial-highlight"></div>
-            <div class="tutorial-content">
-                <h3>Quick Search</h3>
-                <p>Use these buttons to quickly find ideas for common items</p>
-                <button class="tutorial-next">Next →</button>
+            <!-- Slide 2 -->
+            <div class="tutorial-slide" data-step="2">
+                <div class="slide-content">
+                    <div class="slide-icon">💡</div>
+                    <h2>Get Creative Ideas</h2>
+                    <p>Browse through thousands of creative upcycling tutorials and projects.</p>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="tutorial-slide" data-step="3">
+                <div class="slide-content">
+                    <div class="slide-icon">♻️</div>
+                    <h2>Start Creating</h2>
+                    <p>Follow step-by-step guides to transform waste into wonderful items!</p>
+                </div>
             </div>
         </div>
-        <!-- More steps will be added dynamically -->
+
+        <div class="tutorial-controls">
+            <div class="progress-dots"></div>
+            <button class="tutorial-next">Next</button>
+            <button class="tutorial-skip">Skip Tutorial</button>
+        </div>
     </div>
 </body>
 </html> 

@@ -46,7 +46,6 @@
                 <p class="hero-subtitle animate-fade-in">Join thousands of creators turning everyday waste into beautiful, useful items</p>
                 <div class="hero-cta animate-slide-up">
                     <a href="{{ url_for('app_page') }}" class="primary-button pulse">Start Creating</a>
-                    <button class="secondary-button glow" onclick="playDemo()">Watch Demo</button>
                 </div>
             </div>
         </div>
@@ -180,7 +179,7 @@
         <div class="cta-content">
             <h2>Ready to Start Creating?</h2>
             <p>Join our community and start transforming waste into wonderful today</p>
-            <a href="/app" class="cta-button">Get Started Now</a>
+            <a href="{{ url_for('app_page') }}" class="cta-button">Get Started Now</a>
         </div>
     </section>
 

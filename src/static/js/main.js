@@ -195,9 +195,106 @@ function playVideo(videoId) {
     document.body.appendChild(modal);
 }
 
+// Welcome Screen Management
+function initializeWelcomeScreen() {
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const startButton = document.getElementById('start-tutorial');
+    const skipButton = document.getElementById('skip-tutorial');
+    const tutorialModal = document.querySelector('.tutorial-modal');
+
+    // Only show welcome screen if tutorial hasn't been completed
+    if (!localStorage.getItem('tutorialComplete')) {
+        welcomeScreen.style.display = 'flex';
+
+        // Start Tutorial Button
+        startButton.onclick = function() {
+            welcomeScreen.style.display = 'none';
+            startTutorial();
+        };
+
+        // Skip Tutorial Button
+        skipButton.onclick = function() {
+            welcomeScreen.style.display = 'none';
+            localStorage.setItem('tutorialComplete', 'true');
+        };
+    } else {
+        welcomeScreen.style.display = 'none';
+    }
+}
+
+// Tutorial Management
+function startTutorial() {
+    const modal = document.querySelector('.tutorial-modal');
+    const slides = document.querySelectorAll('.tutorial-slide');
+    const nextBtn = document.querySelector('.tutorial-next');
+    const skipBtn = document.querySelector('.tutorial-skip');
+    const progressDots = document.querySelector('.progress-dots');
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    // Create progress dots
+    progressDots.innerHTML = '';
+    for (let i = 0; i < totalSteps; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        progressDots.appendChild(dot);
+    }
+
+    // Show first slide
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[0].classList.add('active');
+
+    // Show tutorial
+    modal.classList.remove('hidden');
+    setTimeout(() => modal.classList.add('visible'), 100);
+
+    // Next button handler
+    nextBtn.onclick = function() {
+        if (currentStep === totalSteps) {
+            endTutorial();
+            return;
+        }
+
+        // Hide current slide
+        slides[currentStep - 1].classList.remove('active');
+        progressDots.children[currentStep - 1].classList.remove('active');
+
+        // Show next slide
+        currentStep++;
+        slides[currentStep - 1].classList.add('active');
+        progressDots.children[currentStep - 1].classList.add('active');
+
+        // Update button text on last slide
+        if (currentStep === totalSteps) {
+            nextBtn.textContent = 'Get Started';
+        }
+    };
+
+    // Skip button handler
+    skipBtn.onclick = endTutorial;
+}
+
+function endTutorial() {
+    const modal = document.querySelector('.tutorial-modal');
+    modal.classList.remove('visible');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        localStorage.setItem('tutorialComplete', 'true');
+    }, 300);
+}
+
+// Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
     setupHeaderAnimation();
-    showWelcomeScreen();
+    
+    // Skip welcome screen and tutorial
+    localStorage.setItem('tutorialComplete', 'true');
+    
+    // Hide welcome screen if it exists
+    const welcomeScreen = document.getElementById('welcome-screen');
+    if (welcomeScreen) {
+        welcomeScreen.style.display = 'none';
+    }
 });
 
 function setupHeaderAnimation() {
@@ -223,70 +320,4 @@ function setupHeaderAnimation() {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('open');
-}
-
-function showWelcomeScreen() {
-    const welcomeScreen = document.getElementById('welcome-screen');
-    const startButton = document.getElementById('start-tutorial');
-    const skipButton = document.getElementById('skip-tutorial');
-    
-    startButton.addEventListener('click', () => {
-        welcomeScreen.style.opacity = '0';
-        setTimeout(() => {
-            welcomeScreen.remove();
-            startTutorial();
-        }, 500);
-    });
-    
-    skipButton.addEventListener('click', () => {
-        welcomeScreen.style.opacity = '0';
-        setTimeout(() => welcomeScreen.remove(), 500);
-    });
-}
-
-function startTutorial() {
-    const overlay = document.getElementById('tutorial-overlay');
-    let currentStep = 0;
-    
-    function showStep(index) {
-        const step = tutorialSteps[index];
-        const target = document.querySelector(step.target);
-        const rect = target.getBoundingClientRect();
-        
-        overlay.innerHTML = `
-            <div class="tutorial-step" data-step="${index + 1}">
-                <div class="tutorial-highlight" style="
-                    top: ${rect.top - 10}px;
-                    left: ${rect.left - 10}px;
-                    width: ${rect.width + 20}px;
-                    height: ${rect.height + 20}px;
-                "></div>
-                <div class="tutorial-content" style="
-                    top: ${step.position === 'bottom' ? rect.bottom + 20 : rect.top - 120}px;
-                    left: ${rect.left}px;
-                ">
-                    <h3>${step.title}</h3>
-                    <p>${step.content}</p>
-                    <button class="tutorial-next">
-                        ${index < tutorialSteps.length - 1 ? 'Next →' : 'Finish'}
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        overlay.classList.remove('hidden');
-        setTimeout(() => overlay.classList.add('visible'), 50);
-        
-        const nextButton = overlay.querySelector('.tutorial-next');
-        nextButton.addEventListener('click', () => {
-            if (index < tutorialSteps.length - 1) {
-                showStep(index + 1);
-            } else {
-                overlay.classList.remove('visible');
-                setTimeout(() => overlay.classList.add('hidden'), 300);
-            }
-        });
-    }
-    
-    showStep(0);
 }

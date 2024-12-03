@@ -1,0 +1,14 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Recycling Symbol -->
+    <g transform="translate(100,100)" fill="none" stroke="#00A67E" stroke-width="4">
+        <!-- Arrow 1 -->
+        <path d="M0,-50 A50,50 0 0,1 43,25 L33,15 M43,25 L53,35" opacity="0.8"/>
+        <!-- Arrow 2 -->
+        <path d="M43,25 A50,50 0 0,1 -43,25 L-33,15 M-43,25 L-53,35" opacity="0.8"/>
+        <!-- Arrow 3 -->
+        <path d="M-43,25 A50,50 0 0,1 0,-50 L10,-40 M0,-50 L-10,-60" opacity="0.8"/>
+    </g>
+    
+    <!-- Center Circle -->
+    <circle cx="100" cy="100" r="30" fill="#00A67E" opacity="0.1"/>
+</svg> 
