@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uncycle - Transform Waste into Wonderful</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <nav class="nav">
+            <div class="nav-inner">
+                <div class="logo animate-fade-in">UNCYCLE</div>
+                <div class="nav-center">
+                    <div class="nav-links animate-slide-down">
+                        <a href="#about">About</a>
+                        <a href="#impact">Impact</a>
+                        <a href="#how-it-works">How It Works</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="hero-content">
+            <div class="hero-background">
+                <div class="animated-shapes">
+                    <div class="shape circle"></div>
+                    <div class="shape square"></div>
+                    <div class="shape triangle"></div>
+                    <div class="shape hexagon"></div>
+                </div>
+                <div class="particle-overlay"></div>
+            </div>
+            
+            <div class="hero-text animate-slide-up">
+                <h1 class="hero-title">
+                    <span class="gradient-text animate-chars">Transform</span> 
+                    <span class="animate-chars">Waste</span>
+                    <br>
+                    <span class="animate-chars">Into</span> 
+                    <span class="gradient-text animate-chars">Wonderful</span>
+                </h1>
+                <p class="hero-subtitle animate-fade-in">Join thousands of creators turning everyday waste into beautiful, useful items</p>
+                <div class="hero-cta animate-slide-up">
+                    <a href="{{ url_for('app_page') }}" class="primary-button pulse">Start Creating</a>
+                    <button class="secondary-button glow" onclick="playDemo()">Watch Demo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <h2>About Uncycle</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p class="lead">An innovative academic initiative transforming waste management through digital solutions.</p>
+                    <p>Uncycle is a Personal Intellectual Project (PIP) developed by David Imongirie as part of the Open Minds II course in the Master's program "Geography: Global Change and Sustainability" at the University of Vienna.</p>
+                    <p>This platform represents a convergence of academic research, environmental sustainability, and digital innovation, aiming to revolutionize how we approach waste management and recycling in our communities.</p>
+                    <div class="academic-info">
+                        <h3>Academic Context</h3>
+                        <ul>
+                            <li>Program: MSc Geography: Global Change and Sustainability</li>
+                            <li>Institution: University of Vienna</li>
+                            <li>Course: Open Minds II</li>
+                            <li>Developer: David Imongirie</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="{{ url_for('static', filename='images/about-illustration.svg') }}" alt="Sustainability Illustration">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="partners">
+        <div class="partners-content">
+            <h2>Partners & Stakeholders</h2>
+            <p class="partners-subtitle">Aligned with global sustainability initiatives and supported by leading institutions</p>
+            
+            <div class="partners-grid">
+                <div class="partner-category academic">
+                    <h3>Academic Partners</h3>
+                    <div class="logo-grid">
+                        <img src="{{ url_for('static', filename='images/logos/logo-univie.png') }}" alt="University of Vienna">
+                        <img src="{{ url_for('static', filename='images/logos/logo-boku.png') }}" alt="BOKU Vienna">
+                    </div>
+                </div>
+                
+                <div class="partner-category government">
+                    <h3>Government Support</h3>
+                    <div class="logo-grid">
+                        <img src="{{ url_for('static', filename='images/logos/logo-austria-gov.png') }}" alt="Austrian Government">
+                        <img src="{{ url_for('static', filename='images/logos/logo-vienna-city.png') }}" alt="City of Vienna">
+                    </div>
+                </div>
+                
+                <div class="partner-category international">
+                    <h3>International Organizations</h3>
+                    <div class="logo-grid">
+                        <img src="{{ url_for('static', filename='images/logos/logo-un.png') }}" alt="United Nations">
+                        <img src="{{ url_for('static', filename='images/logos/logo-unep.png') }}" alt="UNEP">
+                    </div>
+                </div>
+                
+                <div class="partner-category ngos">
+                    <h3>NGO Partners</h3>
+                    <div class="logo-grid">
+                        <img src="{{ url_for('static', filename='images/logos/logo-greenpeace.png') }}" alt="Greenpeace">
+                        <img src="{{ url_for('static', filename='images/logos/logo-wwf.png') }}" alt="WWF">
+                        <img src="{{ url_for('static', filename='images/logos/logo-zero-waste.png') }}" alt="Zero Waste">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="how-it-works">
+        <h2>How It Works</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-illustration">
+                    <img src="{{ url_for('static', filename='images/illustrations/recycling.svg') }}" alt="Recycling Process">
+                </div>
+                <h3>Search</h3>
+                <p>Find creative ways to reuse items you'd normally throw away</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <h3>Learn</h3>
+                <p>Follow step-by-step tutorials from our community of creators</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">♻️</div>
+                <h3>Create</h3>
+                <p>Transform waste into beautiful and useful items</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3>Impact</h3>
+                <p>Join the movement to reduce waste and save our planet</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact" id="impact">
+        <div class="impact-content">
+            <h2>Our Impact</h2>
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="impact-number">10,000+</div>
+                    <div class="impact-label">Active Creators</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-number">50,000+</div>
+                    <div class="impact-label">Projects Created</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-number">100</div>
+                    <div class="impact-label">Tons of Waste Saved</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-number">150+</div>
+                    <div class="impact-label">Countries Reached</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Ready to Start Creating?</h2>
+            <p>Join our community and start transforming waste into wonderful today</p>
+            <a href="/app" class="cta-button">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Uncycle</h3>
+                <p>Transform waste into wonderful creations</p>
+            </div>
+            <div class="footer-section">
+                <h3>Links</h3>
+                <a href="#about">About</a>
+                <a href="#impact">Impact</a>
+                <a href="#how-it-works">How It Works</a>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">YouTube</a>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Uncycle. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Demo Video Modal -->
+    <div id="demo-modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <video controls>
+                <source src="{{ url_for('static', filename='video/demo.mp4') }}" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <!-- Add background patterns -->
+    <div class="background-patterns">
+        <img src="{{ url_for('static', filename='images/backgrounds/pattern.svg') }}" class="pattern-overlay">
+        <img src="{{ url_for('static', filename='images/backgrounds/waves.svg') }}" class="waves-decoration">
+        <img src="{{ url_for('static', filename='images/backgrounds/dots.svg') }}" class="dots-pattern">
+    </div>
+
+    <!-- Add hero illustration -->
+    <div class="hero-illustration">
+        <img src="{{ url_for('static', filename='images/illustrations/hero-bg.svg') }}" alt="Sustainability Illustration">
+    </div>
+
+    <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+</body>
+</html> 

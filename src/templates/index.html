@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Uncycle - Transform waste into wonderful. Find creative ways to give items a second life.">
+    <meta name="keywords" content="recycling, upcycling, sustainability, reuse, eco-friendly">
+    <title>Uncycle - Transform Waste into Wonderful</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <!-- Add PWA meta tags -->
+    <meta name="theme-color" content="#00A67E">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-left">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+            </button>
+            <a href="/" class="logo">UNCYCLE</a>
+        </div>
+        <div class="nav-right">
+            <a href="#about">ABOUT</a>
+            <a href="#categories">CATEGORIES</a>
+            <a href="#contact">CONTACT</a>
+        </div>
+    </nav>
+
+    <!-- After nav and before sidebar -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-text">
+                <div class="text-animation">
+                    <div class="text-line">
+                        TRANSFORM 
+                        <div class="words">
+                            <span>WASTE</span>
+                            <span>PLASTIC</span>
+                            <span>PAPER</span>
+                            <span>GLASS</span>
+                        </div>
+                    </div>
+                    <div class="text-line emphasis">INTO SOMETHING BEAUTIFUL</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <h3>MATERIALS</h3>
+                <ul>
+                    <li><a href="#" onclick="quickSearch('plastic')">PLASTIC</a></li>
+                    <li><a href="#" onclick="quickSearch('glass')">GLASS</a></li>
+                    <li><a href="#" onclick="quickSearch('paper')">PAPER</a></li>
+                    <li><a href="#" onclick="quickSearch('metal')">METAL</a></li>
+                    <li><a href="#" onclick="quickSearch('textile')">TEXTILE</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3>ITEMS</h3>
+                <ul>
+                    <li><a href="#" onclick="quickSearch('bottles')">BOTTLES</a></li>
+                    <li><a href="#" onclick="quickSearch('containers')">CONTAINERS</a></li>
+                    <li><a href="#" onclick="quickSearch('furniture')">FURNITURE</a></li>
+                    <li><a href="#" onclick="quickSearch('electronics')">ELECTRONICS</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Search Section with Quick Links -->
+        <section class="search-section">
+            <form id="searchForm" onsubmit="searchTutorials(event)">
+                <input 
+                    type="text" 
+                    name="q" 
+                    placeholder="SEARCH TUTORIALS" 
+                    required
+                >
+            </form>
+            
+            <div class="quick-search">
+                <div class="quick-search-title">POPULAR SEARCHES</div>
+                <div class="quick-search-grid">
+                    <button onclick="quickSearch('plastic bottles')" class="quick-link">
+                        <span class="icon">♳</span>
+                        <span class="text">PLASTIC BOTTLES</span>
+                    </button>
+                    <button onclick="quickSearch('glass jars')" class="quick-link">
+                        <span class="icon">🫙</span>
+                        <span class="text">GLASS JARS</span>
+                    </button>
+                    <button onclick="quickSearch('cardboard')" class="quick-link">
+                        <span class="icon">📦</span>
+                        <span class="text">CARDBOARD</span>
+                    </button>
+                    <button onclick="quickSearch('clothing')" class="quick-link">
+                        <span class="icon">👕</span>
+                        <span class="text">CLOTHING</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add after search box -->
+        <div class="filter-controls">
+            <div class="filter-group">
+                <label>SORT BY</label>
+                <select onchange="updateSort(this.value)">
+                    <option value="relevance">Relevance</option>
+                    <option value="date">Date</option>
+                    <option value="views">Views</option>
+                    <option value="rating">Rating</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>DURATION</label>
+                <select onchange="updateDuration(this.value)">
+                    <option value="any">Any Length</option>
+                    <option value="short">Short (< 5min)</option>
+                    <option value="medium">Medium (5-20min)</option>
+                    <option value="long">Long (> 20min)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Grid Layout -->
+        <section class="grid-layout">
+            <div id="results" class="project-grid">
+                <!-- Results will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- Add notification container -->
+    <div id="notification-container" aria-live="polite"></div>
+
+    <!-- Add loading indicator -->
+    <div id="loading-indicator" class="loading-indicator" role="status" aria-hidden="true">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR-GA-ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'YOUR-GA-ID');
+    </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/js/sw.js')
+                .then(registration => console.log('ServiceWorker registered'))
+                .catch(err => console.error('ServiceWorker registration failed:', err));
+        }
+    </script>
+
+    <!-- Add history section -->
+    <div class="history-section">
+        <h3>Recent Searches</h3>
+        <div id="search-history"></div>
+    </div>
+
+    <!-- Add trending section -->
+    <div class="trending-section">
+        <h3>Trending Searches</h3>
+        <div id="trending-searches"></div>
+    </div>
+
+    <!-- Update video card template -->
+    <div class="video-card">
+        <button 
+            class="favorite-button" 
+            onclick="toggleFavorite('${video.id}', '${video.title}')"
+        >♥</button>
+        <!-- Rest of video card content -->
+    </div>
+
+    <!-- Add after body tag -->
+    <div id="welcome-screen" class="welcome-overlay">
+        <div class="welcome-content">
+            <h1>Welcome to Uncycle</h1>
+            <p class="tagline">Transform waste into wonderful creations</p>
+            
+            <div class="welcome-steps">
+                <div class="step">
+                    <div class="step-icon">🔍</div>
+                    <h3>Search</h3>
+                    <p>Find creative ways to reuse everyday items</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">💡</div>
+                    <h3>Discover</h3>
+                    <p>Get inspired by thousands of creative ideas</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">♻️</div>
+                    <h3>Create</h3>
+                    <p>Turn waste into beautiful and useful items</p>
+                </div>
+            </div>
+            
+            <button id="start-tutorial" class="welcome-button">Start Tutorial</button>
+            <button id="skip-tutorial" class="welcome-button secondary">Skip Tutorial</button>
+        </div>
+    </div>
+
+    <!-- Tutorial overlay -->
+    <div id="tutorial-overlay" class="tutorial-overlay hidden">
+        <div class="tutorial-step" data-step="1">
+            <div class="tutorial-highlight"></div>
+            <div class="tutorial-content">
+                <h3>Quick Search</h3>
+                <p>Use these buttons to quickly find ideas for common items</p>
+                <button class="tutorial-next">Next →</button>
+            </div>
+        </div>
+        <!-- More steps will be added dynamically -->
+    </div>
+</body>
+</html> 

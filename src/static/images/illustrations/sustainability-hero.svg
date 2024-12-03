@@ -1,0 +1,26 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+    <!-- Circular Economy Symbol -->
+    <g transform="translate(400,300)" fill="none" stroke="#00A67E" stroke-width="2">
+        <circle r="150" opacity="0.2"/>
+        <!-- Recycling Arrows -->
+        <path d="M0,-150 A150,150 0 0,1 130,75" stroke-width="4" opacity="0.4"/>
+        <path d="M130,75 A150,150 0 0,1 -130,75" stroke-width="4" opacity="0.4"/>
+        <path d="M-130,75 A150,150 0 0,1 0,-150" stroke-width="4" opacity="0.4"/>
+        
+        <!-- Inner Elements -->
+        <circle r="100" opacity="0.15"/>
+        <circle r="50" opacity="0.1"/>
+        
+        <!-- Decorative Elements -->
+        <path d="M-180,0 L180,0" stroke-dasharray="5,5" opacity="0.1"/>
+        <path d="M0,-180 L0,180" stroke-dasharray="5,5" opacity="0.1"/>
+    </g>
+    
+    <!-- Leaf Symbols -->
+    <g transform="translate(200,200)" fill="#00A67E">
+        <path d="M0,0 Q50,-50 100,0 Q50,50 0,0" opacity="0.2"/>
+    </g>
+    <g transform="translate(600,400)" fill="#00A67E">
+        <path d="M0,0 Q50,-50 100,0 Q50,50 0,0" opacity="0.2"/>
+    </g>
+</svg> 

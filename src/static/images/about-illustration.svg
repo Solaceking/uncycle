@@ -1,0 +1,28 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Main Circle -->
+    <circle cx="300" cy="200" r="150" fill="#00A67E" opacity="0.1"/>
+    
+    <!-- Recycling Arrows -->
+    <g transform="translate(300,200)" stroke="#00A67E" stroke-width="3" fill="none">
+        <!-- Arrow 1 -->
+        <path d="M-50,-80 A100,100 0 0,1 50,-80 L30,-60 M50,-80 L70,-100" opacity="0.8"/>
+        <!-- Arrow 2 -->
+        <path d="M80,0 A100,100 0 0,1 0,80 L-20,60 M0,80 L-20,100" opacity="0.8"/>
+        <!-- Arrow 3 -->
+        <path d="M-80,0 A100,100 0 0,1 0,-80 L20,-60 M0,-80 L20,-100" opacity="0.8"/>
+    </g>
+    
+    <!-- Decorative Elements -->
+    <g fill="#FF3366" opacity="0.2">
+        <circle cx="150" cy="100" r="20"/>
+        <circle cx="450" cy="300" r="30"/>
+        <circle cx="400" cy="80" r="15"/>
+    </g>
+    
+    <!-- Connecting Lines -->
+    <g stroke="#00A67E" stroke-width="1" opacity="0.3">
+        <line x1="150" y1="100" x2="300" y2="200"/>
+        <line x1="450" y1="300" x2="300" y2="200"/>
+        <line x1="400" y1="80" x2="300" y2="200"/>
+    </g>
+</svg> 
